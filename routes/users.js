@@ -11,7 +11,7 @@ router.get("/", auth, async (req, res) => {
   res.send(users);
 });
 
-router.post("/", [validate(validator)], async (req, res) => {
+router.post("/", async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
 
   if (user) return res.status(400).send("User with given email already exists");
@@ -24,7 +24,7 @@ router.post("/", [validate(validator)], async (req, res) => {
 
   const token = user.generateAuthToken();
 
-  user.save();
+  await user.save();
   res.header("x-auth-token", token).send(_.pick(user, ["userName", "email"]));
 });
 
