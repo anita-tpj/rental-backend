@@ -8,7 +8,7 @@
     "start": "node index.js",
     "build": "echo \"nobuild\""
   },
-  "engines":{"node": "22.x"},
+  "engines":{"node": "22.20.0"},
   "keywords": [],
   "author": "",
   "license": "ISC",

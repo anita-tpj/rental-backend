@@ -3,7 +3,7 @@ const app = express();
 const port = process.env.PORT || config.get("port");
 const winston = require("winston");
 
-router.get("/health", (_req, res) => res.send("ok"));
+app.get("/health", (_req, res) => res.send("ok"));
 
 require("./startup/logger")();
 require("./startup/routes")(app);
