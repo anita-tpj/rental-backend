@@ -13,7 +13,7 @@ const schema = Joi.object({
 const movieSchema = new mongoose.Schema({
   title: {
     type: String,
-    require: true,
+    required: true,
     minlength: 2,
     maxlength: 255,
     trim: true,
@@ -22,24 +22,24 @@ const movieSchema = new mongoose.Schema({
     type: Number,
     min: 0,
     max: 255,
-    require: true,
+    required: true,
   },
   dailyRentalRate: {
     type: Number,
     min: 0,
     max: 255,
-    require: true,
+    required: true,
   },
   genre: {
     type: genreSchema,
-    require: true,
+    required: true,
   },
 });
 
 const Movie = new mongoose.model("Movie", movieSchema);
 
-function validateMovie(customer) {
-  return schema.validate(customer);
+function validateMovie(movie) {
+  return schema.validate(movie);
 }
 
 exports.Movie = Movie;

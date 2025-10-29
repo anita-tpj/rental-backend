@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { User, validator } = require("../models/user");
+const { User } = require("../models/user");
 const validate = require("../middleware/validate");
 const bcrypt = require("bcrypt");
+const Joi = require("joi");
 
-router.post("/", validate(validator), async (req, res) => {
+router.post("/", async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
 
   if (!user) return res.status(400).send("Invalid email or password");
@@ -17,5 +18,14 @@ router.post("/", validate(validator), async (req, res) => {
 
   res.send(token);
 });
+
+function validateAuth(req) {
+  const schema = new Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(8).required(),
+  });
+
+  return schema.validate(req);
+}
 
 module.exports = router;

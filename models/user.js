@@ -47,4 +47,4 @@ function validateUser(user) {
 }
 
 exports.User = User;
-exports.vaidator = validateUser;
+exports.validator = validateUser;

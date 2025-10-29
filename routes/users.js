@@ -7,11 +7,11 @@ const bcrypt = require("bcrypt");
 const auth = require("../middleware/auth");
 
 router.get("/", auth, async (req, res) => {
-  const users = await User.find().sort("name");
+  const users = await User.find().sort("userName");
   res.send(users);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validate(validator), async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
 
   if (user) return res.status(400).send("User with given email already exists");
