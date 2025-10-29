@@ -1,3 +1,4 @@
+const homeRouter = require("../routes/home");
 const genresRouter = require("../routes/genres");
 const customersRouter = require("../routes/customers");
 const moviesRouter = require("../routes/movies");
@@ -10,6 +11,7 @@ const express = require("express");
 
 module.exports = function (app) {
   app.use(express.json());
+  app.use("/", homeRouter);
   app.use("/api/genres", genresRouter);
   app.use("/api/customers", customersRouter);
   app.use("/api/movies", moviesRouter);
