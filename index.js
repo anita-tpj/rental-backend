@@ -1,8 +1,16 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const config = require("config");
 const port = process.env.PORT || config.get("port");
 const winston = require("winston");
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.get("/health", (_req, res) => res.send("ok"));
 
