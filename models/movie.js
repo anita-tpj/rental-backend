@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 const objectId = require("joi-objectid")(Joi);
-const { genreSchema } = require("./genre");
+const { genreSchema, Genre } = require("./genre");
 
 const schema = Joi.object({
   title: Joi.string().min(2).max(50).required(),
@@ -31,8 +31,8 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   genre: {
-    type: genreSchema,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Genre',
   },
 });
 

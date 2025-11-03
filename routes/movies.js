@@ -14,7 +14,10 @@ router.get("/", async (req, res) => {
   if (genre) {
     filter = { "genre._id": genre };
   }
-  const movies = await Movie.find(filter).sort("title").select("-__v");
+  const movies = await Movie.find(filter)
+    .populate("genre")
+    .sort("title")
+    .select("-__v");
   res.send(movies);
 });
 
@@ -24,10 +27,7 @@ router.post("/", [auth, validate(validator)], async (req, res) => {
 
   let movie = new Movie({
     title: req.body.title,
-    genre: {
-      _id: genre._id,
-      name: genre.name,
-    },
+    genre: req.body.genreId,
     numberInStock: req.body.numberInStock,
     dailyRentalRate: req.body.dailyRentalRate,
   });
