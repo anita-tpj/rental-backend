@@ -5,13 +5,6 @@ const config = require("config");
 const port = process.env.PORT || config.get("port");
 const winston = require("winston");
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
-
 const ALLOWED_ORIGINS = [
   "http://localhost:5173",
   "https://rental-ebon.vercel.app",
