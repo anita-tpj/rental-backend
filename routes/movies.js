@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
   let filter = {};
 
   if (genre) {
-    filter = { "genre.name": genre };
+    filter = { "genre._id": genre };
   }
   const movies = await Movie.find(filter).sort("title").select("-__v");
   res.send(movies);
