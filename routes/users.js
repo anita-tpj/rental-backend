@@ -16,7 +16,9 @@ router.post("/", validate(validator), async (req, res) => {
 
   if (user) return res.status(400).send("User with given email already exists");
 
-  user = new User(_.pick(req.body, ["userName", "email", "password"]));
+  user = new User(
+    _.pick(req.body, ["userName", "email", "password", "isAdmin"])
+  );
 
   const salt = await bcrypt.genSalt(10);
 

@@ -12,6 +12,36 @@ app.use(
   })
 );
 
+const ALLOWED_ORIGINS = [
+  "http://localhost:5173",
+  "https://rental-ebon.vercel.app",
+];
+
+const VERCEL_PREVIEW = /\.vercel\.app$/;
+
+app.use(
+  cors({
+    origin(origin, cb) {
+      if (!origin) return cb(null, true);
+
+      if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+
+      try {
+        const host = new URL(origin).hostname;
+        if (VERCEL_PREVIEW.test(host)) return cb(null, true);
+      } catch (_) {
+        // fall through
+      }
+
+      return cb(new Error(`Not allowed by CORS: ${origin}`));
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "x-auth-token"],
+    exposedHeaders: ["x-auth-token"],
+    credentials: false,
+  })
+);
+
 app.get("/health", (_req, res) => res.send("ok"));
 
 require("./startup/logger")();
