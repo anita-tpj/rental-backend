@@ -9,10 +9,11 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   const { genre } = req.query;
+  console.log(genre);
   let filter = {};
 
   if (genre) {
-    filter = { "genre._id": genre };
+    filter = { genre: genre };
   }
   const movies = await Movie.find(filter)
     .populate("genre")
