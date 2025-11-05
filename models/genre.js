@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 
 const schema = Joi.object({
-  name: Joi.string().min(5).max(50).required(),
+  name: Joi.string().min(2).max(20).required(),
 });
 
 const genreSchema = new mongoose.Schema({
   name: {
     type: String,
     require: true,
-    minlength: 5,
-    maxlength: 50,
+    minlength: 2,
+    maxlength: 20,
   },
 });
 
