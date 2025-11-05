@@ -13,7 +13,7 @@ const schema = new Joi.object({
 const userSchema = mongoose.Schema({
   userName: {
     type: String,
-    minLength: 2,
+    minLength: 1,
     maxLength: 50,
     trim: true,
   },

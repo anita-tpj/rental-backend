@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 
 const schema = Joi.object({
-  name: Joi.string().min(5).max(50).required(),
-  phone: Joi.string().min(5).max(50).required(),
+  name: Joi.string().min(1).max(20).required(),
+  phone: Joi.string().min(10).max(12).required(),
   isGold: Joi.boolean().required(),
 });
 
