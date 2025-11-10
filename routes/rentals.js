@@ -10,7 +10,17 @@ const validateObjectId = require("../middleware/validateObjectId");
 const router = express.Router();
 
 router.get("/", auth, async (req, res) => {
-  const rentals = await Rental.find().select("-__v").sort("-rentalDate");
+  const { searchQuery } = req.query;
+  let filter = {};
+  if (searchQuery) {
+    filter = {
+      $or: [
+        { "customer.name": { $regex: searchQuery, $options: "i" } },
+        { "movie.title": { $regex: searchQuery, $options: "i" } },
+      ],
+    };
+  }
+  const rentals = await Rental.find(filter).select("-__v").sort("-rentalDate");
   res.send(rentals);
 });
 

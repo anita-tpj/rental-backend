@@ -7,8 +7,14 @@ const admin = require("../middleware/admin");
 const validateObjectId = require("../middleware/validateObjectId");
 
 router.get("/", auth, async (req, res) => {
-  const customer = await Customer.find().select("-__v").sort("name");
-  res.send(customer);
+  const { searchQuery } = req.query;
+  let filter = {};
+
+  if (searchQuery) {
+    filter = { name: { $regex: searchQuery, $options: "i" } };
+  }
+  const customers = await Customer.find(filter).select("-__v").sort("name");
+  res.send(customers);
 });
 
 router.post("/", [auth, validate(validator)], async (req, res) => {
