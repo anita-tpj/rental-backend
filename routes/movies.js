@@ -8,7 +8,7 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const { genre, searchQuery } = req.query;
+  const { genre, search } = req.query;
 
   let filter = {};
 
@@ -16,8 +16,8 @@ router.get("/", async (req, res) => {
     filter = { genre: genre };
   }
 
-  if (searchQuery) {
-    filter = { title: { $regex: searchQuery, $options: "i" } };
+  if (search) {
+    filter = { ...filter, title: { $regex: search, $options: "i" } };
   }
 
   const movies = await Movie.find(filter)

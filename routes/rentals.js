@@ -10,13 +10,13 @@ const validateObjectId = require("../middleware/validateObjectId");
 const router = express.Router();
 
 router.get("/", auth, async (req, res) => {
-  const { searchQuery } = req.query;
+  const { search } = req.query;
   let filter = {};
-  if (searchQuery) {
+  if (search) {
     filter = {
       $or: [
-        { "customer.name": { $regex: searchQuery, $options: "i" } },
-        { "movie.title": { $regex: searchQuery, $options: "i" } },
+        { "customer.name": { $regex: search, $options: "i" } },
+        { "movie.title": { $regex: search, $options: "i" } },
       ],
     };
   }
