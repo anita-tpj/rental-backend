@@ -8,13 +8,14 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const { genre, search } = req.query;
+  const { genre, order, search } = req.query;
 
   let filter = {};
 
   if (genre) {
     filter = { genre: genre };
   }
+
 
   if (search) {
     filter = { ...filter, title: { $regex: search, $options: "i" } };

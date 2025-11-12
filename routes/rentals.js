@@ -10,17 +10,24 @@ const validateObjectId = require("../middleware/validateObjectId");
 const router = express.Router();
 
 router.get("/", auth, async (req, res) => {
-  const { search } = req.query;
-  let filter = {};
-  if (search) {
-    filter = {
-      $or: [
-        { "customer.name": { $regex: search, $options: "i" } },
-        { "movie.title": { $regex: search, $options: "i" } },
-      ],
-    };
-  }
-  const rentals = await Rental.find(filter).select("-__v").sort("-rentalDate");
+  const search = (req.query.search || "").trim();
+  const start = Number(req.query._start) || 0;
+  const limit = Number(req.query._limit) || 10;
+
+  const filter = search
+    ? {
+        $or: [
+          { "customer.name": { $regex: search, $options: "i" } },
+          { "movie.title": { $regex: search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const rentals = await Rental.find(filter)
+    .skip(start)
+    .limit(limit)
+    .select("-__v")
+    .sort("-rentalDate");
   res.send(rentals);
 });
 

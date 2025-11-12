@@ -7,13 +7,17 @@ const admin = require("../middleware/admin");
 const validateObjectId = require("../middleware/validateObjectId");
 
 router.get("/", auth, async (req, res) => {
-  const { search } = req.query;
-  let filter = {};
+  const search = (req.query.search || "").trim();
+  const start = Number(req.query._start) || 0;
+  const limit = Number(req.query._limit) || 10;
 
-  if (search) {
-    filter = { name: { $regex: search, $options: "i" } };
-  }
-  const customers = await Customer.find(filter).select("-__v").sort("name");
+  const filter = search ? { name: { $regex: search, $options: "i" } } : {};
+
+  const customers = await Customer.find(filter)
+    .sort({ name: 1 })
+    .skip(start)
+    .limit(limit)
+    .select("-__v");
   res.send(customers);
 });
 

@@ -7,7 +7,13 @@ const bcrypt = require("bcrypt");
 const auth = require("../middleware/auth");
 
 router.get("/", auth, async (req, res) => {
-  const users = await User.find().sort("userName");
+  const skip = Number(req.query._start) || 0;
+  const limit = Number(req.query._limit) || 10;
+  const [users, total] = await Promise.all([
+    User.find().skip(skip).limit(limit).sort("userName").select("-__v"),
+    User.countDocuments(),
+  ]);
+  res.set("X-Total-Count", String(total));
   res.send(users);
 });
 
