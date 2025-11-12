@@ -5,6 +5,8 @@ const validate = require("../middleware/validate");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
+const validateObjectId = require("../middleware/validateObjectId");
 
 router.get("/", auth, async (req, res) => {
   const skip = Number(req.query._start) || 0;
@@ -17,7 +19,7 @@ router.get("/", auth, async (req, res) => {
   res.send(users);
 });
 
-router.post("/", validate(validator), async (req, res) => {
+router.post("/", [auth, admin, validate(validator)], async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
 
   if (user) return res.status(400).send("User with given email already exists");
@@ -40,6 +42,15 @@ router.get("/me", auth, async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
 
   if (!user) return res.status(404).send("User with the given ID not exists");
+
+  res.send(user);
+});
+
+router.delete("/:id", [auth, admin, validateObjectId], async (req, res) => {
+  const user = await User.findByIdAndDelete(req.params.id);
+
+  if (!user)
+    return res.status(404).send("The user with the given ID was not found.");
 
   res.send(user);
 });
