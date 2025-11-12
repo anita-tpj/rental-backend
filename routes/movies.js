@@ -8,7 +8,7 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const { genre, order, search } = req.query;
+  const { genre, search } = req.query;
 
   let filter = {};
 
