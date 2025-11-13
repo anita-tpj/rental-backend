@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const validateObjectId = require("../middleware/validateObjectId");
+const superAdmin = require("../middleware/superAdmin");
 
 router.get("/", auth, async (req, res) => {
   const skip = Number(req.query._start) || 0;
@@ -19,14 +20,12 @@ router.get("/", auth, async (req, res) => {
   res.send(users);
 });
 
-router.post("/", [auth, admin, validate(validator)], async (req, res) => {
+router.post("/", [auth, superAdmin, validate(validator)], async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
 
   if (user) return res.status(400).send("User with given email already exists");
 
-  user = new User(
-    _.pick(req.body, ["userName", "email", "password", "isAdmin"])
-  );
+  user = new User(_.pick(req.body, ["userName", "email", "password", "role"]));
 
   const salt = await bcrypt.genSalt(10);
 
@@ -46,13 +45,34 @@ router.get("/me", auth, async (req, res) => {
   res.send(user);
 });
 
-router.delete("/:id", [auth, admin, validateObjectId], async (req, res) => {
-  const user = await User.findByIdAndDelete(req.params.id);
+router.put(
+  "/:id",
+  [auth, superAdmin, validateObjectId, validate(validator)],
+  async (req, res) => {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { userName: req.body.name, email: req.body.email, role: req.body.role },
+      { new: true }
+    );
 
-  if (!user)
-    return res.status(404).send("The user with the given ID was not found.");
+    if (!user)
+      return res.status(404).send("The user with the given ID was not found.");
 
-  res.send(user);
-});
+    res.send(user);
+  }
+);
+
+router.delete(
+  "/:id",
+  [auth, superAdmin, validateObjectId],
+  async (req, res) => {
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!user)
+      return res.status(404).send("The user with the given ID was not found.");
+
+    res.send(user);
+  }
+);
 
 module.exports = router;

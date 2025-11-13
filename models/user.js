@@ -7,7 +7,7 @@ const schema = new Joi.object({
   userName: Joi.string().min(2).max(50).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
-  isAdmin: Joi.boolean(),
+  role: Joi.string().required(),
 });
 
 const userSchema = mongoose.Schema({
@@ -22,7 +22,6 @@ const userSchema = mongoose.Schema({
     required: true,
     uniq: true,
   },
-
   password: {
     type: String,
     required: true,
@@ -30,12 +29,15 @@ const userSchema = mongoose.Schema({
     maxLength: 1024,
   },
 
-  isAdmin: Boolean,
+  role: {
+    type: String,
+    required: true,
+  },
 });
 
 userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
-    { _id: this._id, isAdmin: this.isAdmin, userName: this.userName },
+    { _id: this._id, role: this.role, userName: this.userName },
     config.get("jwtPrivateKey")
   );
   return token;

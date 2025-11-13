@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 
 module.exports = function (req, res, next) {
-  const isAdmin = req.user.role === "Admin";
+  const isSuperAdmin = req.user.role === "Super Admin";
 
-  if (!isAdmin) return res.status(403).send("Access denied.");
+  if (!isSuperAdmin) return res.status(403).send("Access denied.");
 
   next();
 };
