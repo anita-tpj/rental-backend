@@ -8,14 +8,14 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const { genre, search } = req.query;
+  const { genre, search, order } = req.query;
 
   let filter = {};
+  let orderBy = order || "title";
 
   if (genre) {
     filter = { genre: genre };
   }
-
 
   if (search) {
     filter = { ...filter, title: { $regex: search, $options: "i" } };
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 
   const movies = await Movie.find(filter)
     .populate("genre")
-    .sort("title")
+    .sort(orderBy)
     .select("-__v");
 
   res.send(movies);
